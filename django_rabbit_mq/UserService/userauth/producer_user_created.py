@@ -1,7 +1,7 @@
 import json
 import pika
 
-ROUTING_KEY = 'user.created,key'
+ROUTING_KEY = 'user.created.key'
 EXCHANGE = 'user_exchange'
 THREADS = 5
 

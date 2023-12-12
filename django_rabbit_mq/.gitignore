@@ -4,4 +4,5 @@ venv
 */idea/*
 LoggingService/db.sqlite3
 EmailService/db.sqlite3
+UserService/db.sqlite3
 **/__pycache__/
