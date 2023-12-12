@@ -7,14 +7,14 @@ EXCHANGE = 'user_exchange'
 THREADS = 5
 
 
-class UserQueueListener(object):
+class UserQueueListener(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
         connection = pika.BlockingConnection(pika.ConnectionParameters(
             host='localhost'
         ))
         self.channel = connection.channel()
-        self.channel.queue_declare(exchange=EXCHANGE, exchange_type='direct')
+        self.channel.exchange_declare(exchange=EXCHANGE, exchange_type='direct')
         result = self.channel.queue_declare(exclusive=True, queue='')
         queue_name = result.method.queue
         self.channel.queue_bind(queue=queue_name, exchange=EXCHANGE, routing_key=ROUTING_KEY)

@@ -1,4 +1,7 @@
 venv
-.idea
+.idea/
 .idea/*
 */idea/*
+LoggingService/db.sqlite3
+EmailService/db.sqlite3
+**/__pycache__/
