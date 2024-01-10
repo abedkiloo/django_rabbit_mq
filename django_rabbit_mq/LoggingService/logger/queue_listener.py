@@ -24,8 +24,10 @@ class UserQueueListener(threading.Thread):
     def callback(self, channel, method, properties, body):
         # print(properties.content_type)
         # print(method)
+        message = json.loads(body)
         if properties.content_type == "user_created_method":
-            message = json.loads(body)
+            print(message)
+        if properties.content_type == "product_created_method":
             print(message)
         channel.basic_ack(delivery_tag=method.delivery_tag)
 
