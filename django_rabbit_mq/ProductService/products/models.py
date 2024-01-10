@@ -34,7 +34,7 @@ def get_default_product_category():
 
 # Create your models here.
 class Product(models.Model):
-    seller = models.ForeignKey(User, related_name="products", on_delete=models.CASCADE)
+    # seller = models.ForeignKey(User, related_name="products", on_delete=models.CASCADE)
     category = models.ForeignKey(
         ProductCategory,
         related_name="product_list",

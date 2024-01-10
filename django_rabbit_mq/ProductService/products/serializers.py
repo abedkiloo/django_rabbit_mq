@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from products.models import Product, ProductCategory
+from .models import Product, ProductCategory
+from .product_producer import ProductProducer
+
 
 
 class ProductCategoryReadSerializer(serializers.ModelSerializer):
@@ -30,13 +32,13 @@ class ProductWriteSerializer(serializers.ModelSerializer):
     Serializer class for writing products
     """
 
-    seller = serializers.HiddenField(default=serializers.CurrentUserDefault())
+    # seller = serializers.HiddenField(default=serializers.CurrentUserDefault())
     category = ProductCategoryReadSerializer()
 
     class Meta:
         model = Product
         fields = (
-            "seller",
+            # "seller",
             "category",
             "name",
             "desc",

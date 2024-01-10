@@ -9,27 +9,33 @@ from products.serializers import (
 )
 
 
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
+class ProductCategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    List and Retrieve product categories
+    """
+
+    queryset = ProductCategory.objects.all()
     serializer_class = ProductCategoryReadSerializer
     permission_classes = (permissions.AllowAny,)
 
 
 class ProductViewSet(viewsets.ModelViewSet):
+    """
+    CRUD products
+    """
+
     queryset = Product.objects.all()
 
-    def __init__(self):
-        self.permission_classes = None
-
     def get_serializer_class(self):
-        if self.action.lower() in ('create', 'update', 'partial_update', 'destroy'):
+        if self.action in ("create", "update", "partial_update", "destroy"):
             return ProductWriteSerializer
+
         return ProductReadSerializer
 
     def get_permissions(self):
-        if self.action.lower() in ('create',):
-            self.permission_classes = (permissions.IsAuthenticated,)
-        if self.action.lower() in ('update', 'partial_update', 'destroy',):
+        # if self.action in ("create",):
+        #     self.permission_classes = (permissions.IsAuthenticated,)
+        if self.action in ("update", "partial_update", "destroy"):
             self.permission_classes = (IsSellerOrAdmin,)
         else:
             self.permission_classes = (permissions.AllowAny,)
