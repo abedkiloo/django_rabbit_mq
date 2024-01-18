@@ -8,3 +8,4 @@ class ProductsConfig(AppConfig):
     def ready(self):
         print("Product Signal ready")
         import products.signals
+ 

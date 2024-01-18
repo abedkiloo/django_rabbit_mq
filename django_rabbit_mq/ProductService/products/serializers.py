@@ -3,7 +3,6 @@ from .models import Product, ProductCategory
 from .product_producer import ProductProducer
 
 
-
 class ProductCategoryReadSerializer(serializers.ModelSerializer):
     """
     Serializer class for product categories
@@ -19,7 +18,7 @@ class ProductReadSerializer(serializers.ModelSerializer):
     Serializer class for reading products
     """
 
-    seller = serializers.CharField(source="seller.get_full_name", read_only=True)
+    # seller = serializers.CharField(source="seller.get_full_name", read_only=True)
     category = serializers.CharField(source="category.name", read_only=True)
 
     class Meta:
@@ -50,7 +49,7 @@ class ProductWriteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         category = validated_data.pop("category")
         instance, created = ProductCategory.objects.get_or_create(**category)
-        product = Product.objects.create(**validated_data, category=instance)
+        product = Product.objects.create(category=instance, **validated_data)
 
         return product
 
