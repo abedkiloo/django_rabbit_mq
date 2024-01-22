@@ -1,3 +1,6 @@
+import os
+from django.conf import settings
+
 from rest_framework import permissions, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -60,17 +63,50 @@ class ImportProducts(APIView):
             tree = ET.parse(uploaded_file)
             root = tree.getroot()
 
-
             imported_data = []
             for item in root.findall('product'):
-                name, desc, quantity, price = item.find('name').text, item.find('desc').text, item.find(
-                    'quantity').text, item.find('price').text
-                imported_data.append([name, desc, quantity, price])
+                name, desc, quantity, price, category = item.find('name').text, item.find('desc').text, item.find(
+                    'quantity').text, item.find('price').text, item.find('category')
+                imported_data.append({name, desc, quantity, price, category})
+                instance, created = ProductCategory.objects.get_or_create(category)
+
+                product = Product(name=name, desc=desc, quantity=quantity, price=price, category=instance)
+                product.save()
             return Response(imported_data, status=status.HTTP_200_OK)
         except ET.ParseError:
             return Response({"error": "Invalid XML"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error": f"An error {str(e)} occurred"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, *args, **kwargs):
+        products = Product.objects.all()
+        product_object = ProductReadSerializer(products, many=True)
+        product_list = product_object.data
+        write_to_xml = self.write_to_xml(product_list)
+        return Response({"products": write_to_xml}, status=status.HTTP_200_OK)
+
+    def write_to_xml(self, product_object):
+
+        root_element = ET.Element('products_data')
+        for product_item in product_object:
+            product_element = ET.Element('products')
+            for key, value in product_item.items():
+                ET.SubElement(product_element, key).text = str(value)
+            root_element.append(product_element)
+
+        relative_path = 'product_files/products.xml'
+
+        # Combine the base directory and relative path to form the complete file path
+        file_path = os.path.join(settings.BASE_DIR, relative_path)
+
+        # Ensure the directory exists before saving the file
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+
+        # Save the XML content to the file
+        with open(file_path, 'wb') as file:
+            file.write(ET.tostring(root_element))
+
+        return {'message': 'Products exported to XML file successfully.'}
 
 
 def read_xm_products(xml_file_path):

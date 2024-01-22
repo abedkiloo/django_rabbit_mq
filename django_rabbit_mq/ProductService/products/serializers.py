@@ -26,6 +26,8 @@ class ProductReadSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+
+
 class ProductWriteSerializer(serializers.ModelSerializer):
     """
     Serializer class for writing products
