@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from xml.etree import ElementTree as ET
 from rest_framework import status
+from rest_framework_xml.renderers import XMLRenderer
 
 from rest_framework.parsers import MultiPartParser
 from products.models import Product, ProductCategory
@@ -52,6 +53,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class ImportProductCategory(APIView):
+    renderer_classes = [XMLRenderer]
 
     def post(self, request, ):
         try:
@@ -68,6 +70,15 @@ class ImportProductCategory(APIView):
             return Response({"success": "OK"}, status=status.HTTP_200_OK)
         except Exception as exception:
             return Response({'error': str(exception)}, status=400)
+
+    def get(self, request, format=None):
+
+        try:
+            product_category = ProductCategory.objects.all()
+            product_category_serializer = ProductCategoryReadSerializer(product_category, many=True)
+            return Response(product_category_serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ImportProducts(APIView):
