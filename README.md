@@ -1,4 +1,0 @@
-- Working with Rabbit MQ
-- REading XML in Django/Python into a database
-- Generating an XML tree from model attributes
-- Save the XML to a file 
