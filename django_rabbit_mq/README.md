@@ -1,0 +1,8 @@
+- Working with Rabbit MQ
+  - Producer
+  - Consumer
+  -  Use Commands to run listerns
+- XML in Django/Python
+  - Uploading XML file
+  - Read XML to obtain the tree structure and children value insert into DB
+  - Creating an XML from saved data
