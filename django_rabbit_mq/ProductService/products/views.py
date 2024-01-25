@@ -51,6 +51,25 @@ class ProductViewSet(viewsets.ModelViewSet):
         return super().get_permissions()
 
 
+class ImportProductCategory(APIView):
+
+    def post(self, request, ):
+        try:
+            product_xml = request.FILES.get('product_category')
+            if not product_xml:
+                return Response({"error": "NO valid Category XML provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+            tree = ET.parse(product_xml)
+            root = tree.getroot()
+
+            for item in root.findall('category'):
+                category_name = item.find('name').text
+                prd_category = ProductCategory.objects.get_or_create(name=category_name)
+            return Response({"success": "OK"}, status=status.HTTP_200_OK)
+        except Exception as exception:
+            return Response({'error': str(exception)}, status=400)
+
+
 class ImportProducts(APIView):
     parser_classes = (MultiPartParser,)
 
