@@ -11,6 +11,7 @@ from rest_framework_xml.renderers import XMLRenderer
 from rest_framework.parsers import MultiPartParser
 from products.models import Product, ProductCategory
 from products.permissions import IsSellerOrAdmin
+from products.utls import ProductXMLRendererclass
 from products.serializers import (
     ProductCategoryReadSerializer,
     ProductReadSerializer,
@@ -53,7 +54,7 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 class ImportProductCategory(APIView):
-    renderer_classes = [XMLRenderer]
+    renderer_classes = [ProductXMLRendererclass]
 
     def post(self, request, ):
         try:
