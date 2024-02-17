@@ -140,10 +140,3 @@ class ImportProducts(APIView):
         return {'message': 'Products exported to XML file successfully.'}
 
 
-def read_xm_products(xml_file_path):
-    try:
-        with open(xml_file_path, 'r') as xml_file:
-            xml_data = xml_file.read()
-        headers = {"Content-Type": 'application/xml'}
-    except FileNotFoundError:
-        print("File Not Found")
